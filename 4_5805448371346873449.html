@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sort</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #1b263b;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #fca311;
+            --danger: #e63946;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, var(--dark) 0%, var(--secondary) 100%);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .logo {
+            color: var(--light);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            background: linear-gradient(to right, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .user-balance {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            margin-right: 1rem;
+        }
+        
+        .user-balance i {
+            margin-left: 0.5rem;
+            color: var(--warning);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 10rem 5% 6rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            margin-bottom: -5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==');
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            animation: slideInUp 0.8s ease-out;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: slideInUp 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, var(--accent) 0%, var(--success) 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.8s ease-out 0.4s forwards;
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, var(--warning) 0%, var(--danger) 100%);
+            box-shadow: 0 4px 15px rgba(252, 163, 17, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.6);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(252, 163, 17, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--success) 0%, var(--accent) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn-secondary::after {
+            background: linear-gradient(45deg, var(--danger) 0%, var(--warning) 100%);
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 7rem 0 3rem;
+            color: var(--dark);
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            margin: -2rem auto 4rem;
+            max-width: 600px;
+            color: #666;
+            font-size: 1.1rem;
+            padding: 0 1rem;
+        }
+        
+        /* App Icons Grid */
+        .apps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 2rem;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .app-icon {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+            animation-fill-mode: backwards;
+        }
+        
+        .app-icon:nth-child(1) { animation-delay: 0.1s; }
+        .app-icon:nth-child(2) { animation-delay: 0.2s; }
+        .app-icon:nth-child(3) { animation-delay: 0.3s; }
+        .app-icon:nth-child(4) { animation-delay: 0.4s; }
+        .app-icon:nth-child(5) { animation-delay: 0.5s; }
+        .app-icon:nth-child(6) { animation-delay: 0.6s; }
+        .app-icon:nth-child(7) { animation-delay: 0.7s; }
+        .app-icon:nth-child(8) { animation-delay: 0.8s; }
+        
+        .app-icon:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .app-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            object-fit: contain;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .app-icon:hover .app-logo {
+            animation: pulse 1s infinite;
+        }
+        
+        .app-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .app-offers {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Services Section */
+        .services-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-out;
+            animation-fill-mode: backwards;
+        }
+        
+        .service-card:nth-child(1) { animation-delay: 0.2s; }
+        .service-card:nth-child(2) { animation-delay: 0.4s; }
+        .service-card:nth-child(3) { animation-delay: 0.6s; }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            color: var(--accent);
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .service-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Features Section */
+        .features {
+            background: linear-gradient(135deg, var(--dark) 0%, #2a2d43 100%);
+            color: white;
+            padding: 5rem 5%;
+            margin: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==');
+        }
+        
+        .features .section-title {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .features .section-subtitle {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-left: 1rem;
+            color: var(--accent);
+            background: rgba(72, 149, 239, 0.2);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+        
+        .feature-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .feature-content p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonials-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: """;
+            position: absolute;
+            top: 0;
+            left: 20px;
+            font-size: 8rem;
+            color: rgba(72, 149, 239, 0.1);
+            font-family: serif;
+            line-height: 1;
+        }
+        
+        .testimonial-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-text {
+            margin-bottom: 1.5rem;
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 1rem;
+            border: 3px solid var(--accent);
+        }
+        
+        .author-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .author-title {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card.featured {
+            transform: scale(1.05);
+            border: 2px solid var(--primary);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'الأكثر شعبية';
+            position: absolute;
+            top: 1.5rem;
+            left: -3rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 3rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transform: rotate(-45deg);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .pricing-card.featured:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+        
+        .pricing-name {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            color: #777;
+            font-weight: 400;
+        }
+        
+        .pricing-features {
+            text-align: right;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-feature {
+            margin-bottom: 0.8rem;
+            color: #555;
+            position: relative;
+            padding-right: 1.5rem;
+        }
+        
+        .pricing-feature:before {
+            content: '✓';
+            color: var(--success);
+            position: absolute;
+            right: 0;
+            font-weight: 600;
+        }
+        
+        .pricing-feature.disabled {
+            color: #aaa;
+            text-decoration: line-through;
+        }
+        
+        .pricing-feature.disabled:before {
+            content: '✗';
+            color: var(--danger);
+        }
+        
+        .modals-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: modalIn 0.4s ease-out 0.1s forwards;
+            display: none;
+        }
+        
+        .modal.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .form-group input, 
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+            outline: none;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .close-btn:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-method {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--accent);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .payment-method img {
+            height: 30px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .faq {
+            padding: 5rem 5%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .accordion {
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .accordion-header {
+            background: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f1f1f1;
+            transition: all 0.3s ease;
+        }
+        
+        .accordion-header:hover {
+            background: #f9f9f9;
+        }
+        
+        .accordion-header h3 {
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            background: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion.active .accordion-content {
+            max-height: 500px;
+        }
+        
+        .accordion-body {
+            padding: 1.5rem;
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        footer {
+            background: var(--dark);
+            padding: 4rem 5% 2rem;
+            color: white;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-right: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+        
+        .footer-bottom a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes modalIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* App Services Menu */
+        .app-services-menu {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+            overflow-y: auto;
+            z-index: 2001;
+            transition: right 0.4s ease;
+        }
+        
+        .app-services-menu.active {
+            right: 0;
+        }
+        
+        .app-services-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .app-services-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin-left: 1rem;
+        }
+        
+        .app-services-list {
+            margin-bottom: 2rem;
+        }
+        
+        .app-service-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .app-service-item:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .app-service-item h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .app-service-item p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .app-service-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+            display: none;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .services-container, 
+            .features-container,
+            .testimonials-container,
+            .pricing-container,
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .app-services-menu {
+                width: 85%;
+                right: -85%;
+            }
+            
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .app-icon {
+                padding: 1rem;
+            }
+            
+            .app-logo {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        /* Hamburger Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .mobile-menu {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 100%;
+                background: var(--dark);
+                padding: 1rem;
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+            
+            .mobile-menu.active {
+                right: 0;
+            }
+            
+            .mobile-menu a {
+                display: block;
+                color: white;
+                padding: 0.8rem 1rem;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">sort</a>
+        <div class="nav-links">
+            <a href="#services">الخدمات</a>
+            <a href="#features">المميزات</a>
+            <a href="#pricing">الأسعار</a>
+            <a href="#faq">الأسئلة الشائعة</a>
+            <a href="#contact">اتصل بنا</a>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div class="user-balance">
+                <i class="fas fa-coins"></i>
+                <span>100 نقطة</span>
+            </div>
+            <button class="btn btn-secondary" style="margin: 0 1rem;" onclick="showRechargeModal()">شحن النقاط</button>
+        </div>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+    
+    <div class="mobile-menu">
+        <a href="#services">الخدمات</a>
+        <a href="#features">المميزات</a>
+        <a href="#pricing">الأسعار</a>
+        <a href="#faq">الأسئلة الشائعة</a>
+        <a href="#contact">اتصل بنا</a>
+    </div>
+
+    <section class="hero">
+        <h1>زود متابعينك بسرعة فائقة</h1>
+        <p>احصل على آلاف المتابعين الحقيقيين خلال 24 ساعة فقط بأسعار تنافسية وجودة لا مثيل لها</p>
+        <button class="btn pulse" onclick="showOrderForm()">ابدأ الآن مجانًا</button>
+    </section>
+
+    <section id="services">
+        <h2 class="section-title">مواقع التواصل الاجتماعي</h2>
+        <p class="section-subtitle">نقدم خدمات متكاملة لجميع منصات التواصل الاجتماعي بجودة عالية وأسعار مميزة</p>
+        
+        <div class="apps-container">
+            <div class="app-icon" onclick="showAppServices('instagram')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png" alt="Instagram" class="app-logo">
+                <div class="app-name">انستجرام</div>
+                <div class="app-offers">متابعين، لايكات، مشاهدات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('tiktok')">
+                <img src="https://static.vecteezy.com/system/resources/previews/018/930/572/original/tiktok-logo-tiktok-icon-transparent-free-png.png" alt="TikTok" class="app-logo">
+                <div class="app-name">تيك توك</div>
+                <div class="app-offers">متابعين، لايكات، مشاهدات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('twitter')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/512px-Logo_of_Twitter.svg.png" alt="Twitter" class="app-logo">
+                <div class="app-name">تويتر</div>
+                <div class="app-offers">متابعين، إعادة تغريد، لايكات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('facebook')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png" alt="Facebook" class="app-logo">
+                <div class="app-name">فيسبوك</div>
+                <div class="app-offers">إعجابات، متابعين، مشاهدات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('youtube')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube" class="app-logo">
+                <div class="app-name">يوتيوب</div>
+                <div class="app-offers">مشتركين، مشاهدات، لايكات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('snapchat')">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1024px-Snapchat_logo.svg.png" alt="Snapchat" class="app-logo">
+                <div class="app-name">سناب شات</div>
+                <div class="app-offers">متابعين، مشاهدات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('telegram')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" alt="Telegram" class="app-logo">
+                <div class="app-name">تيليجرام</div>
+                <div class="app-offers">أعضاء، مشاهدات</div>
+            </div>
+            
+            <div class="app-icon" onclick="showAppServices('pinterest')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png" alt="Pinterest" class="app-logo">
+                <div class="app-name">بنترست</div>
+                <div class="app-offers">متابعين، مشاهدات، حفظ</div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="features" class="features">
+        <h2 class="section-title">لماذا تختار خدماتنا؟</h2>
+        <p class="section-subtitle">نقدم لك العديد من المميزات التي تجعلنا الخيار الأفضل في مجال خدمات السوشيال ميديا</p>
+        
+        <div class="features-container">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>سرعة التنفيذ</h3>
+                    <p>نوفر خدماتنا في أسرع وقت ممكن، يبدأ التنفيذ خلال دقائق من تأكيد الطلب</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>حسابات آمنة 100%</h3>
+                    <p>جميع خدماتنا آمنة تماماً ولا تنتهك سياسات المنصات، ضمان أمان لحسابك</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>دعم فني على مدار الساعة</h3>
+                    <p>فريق دعم متكامل جاهز لمساعدتك ومتابعة طلباتك في أي وقت</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>أسعار تنافسية</h3>
+                    <p>أسعارنا هي الأفضل في السوق مع الحفاظ على أعلى مستوى من الجودة</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>حسابات حقيقية ونشطة</h3>
+                    <p>نوفر متابعين ذوي جودة عالية وليس مجرد أرقام، مما يزيد من تفاعل حسابك</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>تقارير أداء</h3>
+                    <p>نوفر تقارير مفصلة عن أداء خدماتنا لمساعدتك في تحليل النتائج</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="ourservices" class="services-section">
+        <h2 class="section-title">خدماتنا</h2>
+        <p class="section-subtitle">نقدم باقة متكاملة من الخدمات لتعزيز تواجدك على منصات التواصل الاجتماعي</p>
+        
+        <div class="services-container">
+            <div class="service-card">
+                <i class="fas fa-users service-icon"></i>
+                <h3>زيادة المتابعين</h3>
+                <p>زيادة عدد المتابعين في حسابك بشكل طبيعي وسريع لتعزيز وجودك على المنصات</p>
+                <div class="price">$2.99 - $50</div>
+                <button class="btn" onclick="showOrderForm()">اطلب الخدمة</button>
+            </div>
+
+            <div class="service-card">
+                <i class="fas fa-heart service-icon"></i>
+                <h3>زيادة الإعجابات</h3>
+                <p>زيادة تفاعل المستخدمين مع منشوراتك من خلال زيادة عدد الإعجابات بشكل طبيعي</p>
+                <div class="price">$1.99 - $40</div>
+                <button class="btn" onclick="showOrderForm()">اطلب الخدمة</button>
+            </div>
+
+            <div class="service-card">
+                <i class="fas fa-eye service-icon"></i>
+                <h3>زيادة المشاهدات</h3>
+                <p>زيادة عدد مشاهدات الفيديوهات والقصص لتحسين وصول محتواك للمستخدمين</p>
+                <div class="price">$3.99 - $60</div>
+                <button class="btn" onclick="showOrderForm()">اطلب الخدمة</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <h2 class="section-title">آراء العملاء</h2>
+        <p class="section-subtitle">تعرف على آراء عملائنا الذين وثقوا بنا وحققوا نتائج مذهلة</p>
+        
+        <div class="testimonials-container">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p class="testimonial-text">
+                        حصلت على أكثر من 10,000 متابع خلال أسبوع واحد فقط! الخدمة ممتازة والدعم الفني سريع جداً في الرد. أنصح بشدة بالتعامل معهم.
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Ahmed" class="author-avatar">
+                        <div>
+                            <div class="author-name">أحمد محمد</div>
+                            <div class="author-title">مؤثر على انستجرام</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p class="testimonial-text">
+                        ساعدتني خدماتهم في تحقيق أهدافي التسويقية بسرعة كبيرة. حصلت على متابعين حقيقيين وزاد تفاعل حسابي بشكل ملحوظ. ممتنة جداً!
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah" class="author-avatar">
+                        <div>
+                            <div class="author-name">سارة أحمد</div>
+                            <div class="author-title">صاحبة متجر إلكتروني</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p class="testimonial-text">
+                        بعد أن جربت العديد من المواقع، وجدت هنا الجودة والسعر المناسب. المتابعين حقيقيين وفعّالين، والأهم من ذلك الخدمة مستمرة ولا تختفي بعد فترة.
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Khalid" class="author-avatar">
+                        <div>
+                            <div class="author-name">خالد العنزي</div>
+                            <div class="author-title">يوتيوبر</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="pricing" class="pricing">
+        <h2 class="section-title">باقات الأسعار</h2>
+        <p class="section-subtitle">اختر الباقة المناسبة لاحتياجاتك بأفضل الأسعار والمميزات</p>
+        
+        <div class="pricing-container">
+            <div class="pricing-card">
+                <div class="pricing-name">الباقة الأساسية</div>
+                <div class="pricing-price">$19.99 <span>/ شهرياً</span></div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">1000 متابع شهرياً</div>
+                    <div class="pricing-feature">2000 إعجاب</div>
+                    <div class="pricing-feature">دعم فني باللغة العربية</div>
+                    <div class="pricing-feature disabled">تحليل أداء الحساب</div>
+                    <div class="pricing-feature disabled">استشارات تسويقية</div>
+                </div>
+                <button class="btn" onclick="selectPlan('basic')">اشترك الآن</button>
+            </div>
+            
+            <div class="pricing-card featured">
+                <div class="pricing-name">الباقة الاحترافية</div>
+                <div class="pricing-price">$49.99 <span>/ شهرياً</span></div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">5000 متابع شهرياً</div>
+                    <div class="pricing-feature">10000 إعجاب</div>
+                    <div class="pricing-feature">دعم فني على مدار الساعة</div>
+                    <div class="pricing-feature">تحليل أداء الحساب</div>
+                    <div class="pricing-feature disabled">استشارات تسويقية</div>
+                </div>
+                <button class="btn" onclick="selectPlan('professional')">اشترك الآن</button>
+            </div>
+            
+            <div class="pricing-card">
+                <div class="pricing-name">الباقة المتقدمة</div>
+                <div class="pricing-price">$99.99 <span>/ شهرياً</span></div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">15000 متابع شهرياً</div>
+                    <div class="pricing-feature">30000 إعجاب</div>
+                    <div class="pricing-feature">دعم فني على مدار الساعة</div>
+                    <div class="pricing-feature">تحليل أداء الحساب</div>
+                    <div class="pricing-feature">استشارات تسويقية أسبوعية</div>
+                </div>
+                <button class="btn" onclick="selectPlan('premium')">اشترك الآن</button>
+            </div>
+        </div>
+    </section>
+    
+    <section id="faq" class="faq">
+        <h2 class="section-title">الأسئلة الشائعة</h2>
+        <p class="section-subtitle">إليك إجابات لأكثر الأسئلة شيوعاً حول خدماتنا</p>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <h3>هل المتابعين حقيقيين أم وهميين؟</h3>
+                <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    نعم، نوفر متابعين حقيقيين ونشطين على جميع المنصات. نهتم بجودة الخدمة ونضمن استمراريتها لفترات طويلة، على عكس الحسابات الوهمية التي تختفي بسرعة.
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <h3>كم من الوقت يستغرق تنفيذ الطلب؟</h3>
+                <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    يبدأ تنفيذ الطلب خلال 24 ساعة كحد أقصى من تأكيد الدفع، وغالباً ما يتم البدء خلال ساعات قليلة. تختلف مدة اكتمال الطلب حسب حجمه، لكننا نضمن تنفيذه بالسرعة الممكنة مع الحفاظ على الجودة.
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <h3>هل الخدمة آمنة على حسابي؟</h3>
+                <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    نعم، خدماتنا آمنة تماماً ولا تنتهك سياسات أي منصة. نحن لا نطلب كلمات المرور أو أي معلومات خاصة بحسابك، كل ما نحتاجه هو اسم المستخدم أو رابط الحساب/المنشور.
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <h3>ما هي طرق الدفع المتاحة؟</h3>
+                <div class="accordion-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    نوفر العديد من طرق الدفع المريحة، منها: بطاقات الائتمان (فيزا، ماستركارد)، بايبال، تحويل بنكي، المحافظ الإلكترونية مثل (Apple Pay، Google Pay)، وبطاقات شحن النقاط.
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="contact" style="padding: 5rem 5%; max-width: 800px; margin: 0 auto;">
+        <h2 class="section-title">اتصل بنا</h2>
+        <p class="section-subtitle">نحن دائماً في خدمتك، لا تتردد في التواصل معنا لأي استفسار</p>
+        
+        <form id="contactForm" onsubmit="return false;" style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+            <div class="form-group">
+                <label for="name">الاسم</label>
+                <input type="text" id="name" placeholder="أدخل اسمك" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">الموضوع</label>
+                <input type="text" id="subject" placeholder="أدخل موضوع الرسالة" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">الرسالة</label>
+                <textarea id="message" rows="5" placeholder="اكتب رسالتك هنا" required></textarea>
+            </div>
+            
+            <button class="btn" style="width: 100%;" onclick="sendContactForm()">إرسال الرسالة</button>
+        </form>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>عن الشركة</h3>
+                <ul class="footer-links">
+                    <li><a href="#">من نحن</a></li>
+                    <li><a href="#">فريق العمل</a></li>
+                    <li><a href="#">سياسة الخصوصية</a></li>
+                    <li><a href="#">شروط الاستخدام</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>خدماتنا</h3>
+                <ul class="footer-links">
+                    <li><a href="#">زيادة المتابعين</a></li>
+                    <li><a href="#">زيادة الإعجابات</a></li>
+                    <li><a href="#">زيادة المشاهدات</a></li>
+                    <li><a href="#">خدمات مخصصة</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>المنصات</h3>
+                <ul class="footer-links">
+                    <li><a href="#">انستجرام</a></li>
+                    <li><a href="#">تيك توك</a></li>
+                    <li><a href="#">تويتر</a></li>
+                    <li><a href="#">فيسبوك</a></li>
+                    <li><a href="#">يوتيوب</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>تواصل معنا</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:info@sort.com"><i class="fas fa-envelope"></i> info@sort.com</a></li>
+                    <li><a href="tel:+966500000000"><i class="fas fa-phone"></i> +966 50 000 0000</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</a></li>
+                </ul>
+                
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sort. جميع الحقوق محفوظة. تم التطوير بواسطة <a href="#">Q_B_H</a></p>
+        </div>
+    </footer>
+    
+    <!-- Modals -->
+    <div class="modals-container" id="modalsContainer">
+        <!-- Order Form Modal -->
+        <div id="orderModal" class="modal">
+            <span class="close-btn" onclick="closeModals()">&times;</span>
+            <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary);">طلب خدمة جديدة</h2>
+            <form id="orderForm" onsubmit="submitOrder(event)">
+                <div class="form-group">
+                    <label>المنصة:</label>
+                    <select id="platform" required>
+                        <option value="">اختر المنصة</option>
+                        <option value="instagram">إنستجرام</option>
+                        <option value="twitter">تويتر</option>
+                        <option value="tiktok">تيك توك</option>
+                        <option value="youtube">يوتيوب</option>
+                        <option value="facebook">فيسبوك</option>
+                        <option value="snapchat">سناب شات</option>
+                        <option value="telegram">تيليجرام</option>
+                        <option value="pinterest">بنترست</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>نوع الخدمة:</label>
+                    <select id="serviceType" required>
+                        <option value="">اختر الخدمة</option>
+                        <option value="followers">متابعين</option>
+                        <option value="likes">لايكات</option>
+                        <option value="views">مشاهدات</option>
+                        <option value="comments">تعليقات</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>الكمية:</label>
+                    <input type="number" id="quantity" min="100" step="100" placeholder="أدخل العدد المطلوب" required>
+                </div>
+
+                <div class="form-group">
+                    <label>رابط الحساب/المنشور:</label>
+                    <input type="url" id="link" placeholder="https://example.com/username" required>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">تأكيد الطلب والدفع</button>
+            </form>
+        </div>
+        
+        <!-- Recharge Points Modal -->
+        <div id="rechargeModal" class="modal">
+            <span class="close-btn" onclick="closeModals()">&times;</span>
+            <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary);">شحن النقاط</h2>
+            
+            <div class="form-group">
+                <label>اختر قيمة الشحن:</label>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="payment-method" onclick="selectRechargeAmount(100)">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">100 نقطة</div>
+                        <div style="margin-top: 0.5rem;">$10</div>
+                    </div>
+                    <div class="payment-method" onclick="selectRechargeAmount(300)">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">300 نقطة</div>
+                        <div style="margin-top: 0.5rem;">$25</div>
+                    </div>
+                    <div class="payment-method" onclick="selectRechargeAmount(500)">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">500 نقطة</div>
+                        <div style="margin-top: 0.5rem;">$40</div>
+                    </div>
+                    <div class="payment-method" onclick="selectRechargeAmount(1000)">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">1000 نقطة</div>
+                        <div style="margin-top: 0.5rem;">$75</div>
+                    </div>
+                    <div class="payment-method" onclick="selectRechargeAmount(2000)">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">2000 نقطة</div>
+                        <div style="margin-top: 0.5rem;">$140</div>
+                    </div>
+                    <div class="payment-method" onclick="selectRechargeAmount(5000)">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">5000 نقطة</div>
+                        <div style="margin-top: 0.5rem;">$300</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>اختر وسيلة الدفع:</label>
+                <div class="payment-methods">
+                    <div class="payment-method" onclick="selectPaymentMethod('credit')">
+                        <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Credit Card">
+                        <div>بطاقة ائتمان</div>
+                    </div>
+                    <div class="payment-method" onclick="selectPaymentMethod('paypal')">
+                        <img src="https://cdn-icons-png.flaticon.com/512/174/174861.png" alt="PayPal">
+                        <div>باي بال</div>
+                    </div>
+                    <div class="payment-method" onclick="selectPaymentMethod('bank')">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Bank Transfer">
+                        <div>تحويل بنكي</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" style="width: 100%; margin-top: 1rem;" onclick="processRecharge()">تأكيد الشحن</button>
+        </div>
+    </div>
+    
+    <!-- App Services Menu -->
+    <div class="app-services-menu" id="appServicesMenu">
+        <div class="app-services-header">
+            <img id="appLogo" src="" alt="App Logo">
+            <h3 id="appName">خدمات التطبيق</h3>
+        </div>
+        
+        <div class="app-services-list" id="appServicesList">
+            <!-- Services will be loaded dynamically -->
+        </div>
+        
+        <button class="btn" style="width: 100%;" onclick="closeAppServices()">إغلاق</button>
+    </div>
+    
+    <!-- Overlay for app services and modals -->
+    <div class="overlay" id="overlay" onclick="closeAllOverlays()"></div>
+
+    <script>
+        // Initialize selected values
+        let selectedRechargeAmount = 0;
+        let selectedPaymentMethod = '';
+        
+        // Show Order Form
+        function showOrderForm() {
+            document.getElementById('modalsContainer').style.display = 'flex';
+            document.getElementById('orderModal').classList.add('active');
+            document.getElementById('overlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Show Recharge Points Modal
+        function showRechargeModal() {
+            document.getElementById('modalsContainer').style.display = 'flex';
+            document.getElementById('rechargeModal').classList.add('active');
+            document.getElementById('overlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close All Modals
+        function closeModals() {
+            document.getElementById('modalsContainer').style.display = 'none';
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.getElementById('overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Submit Order Form
+        function submitOrder(e) {
+            e.preventDefault();
+            const platform = document.getElementById('platform').value;
+            const serviceType = document.getElementById('serviceType').value;
+            const quantity = document.getElementById('quantity').value;
+            const link = document.getElementById('link').value;
+            
+            const orderData = {
+                platform,
+                serviceType,
+                quantity,
+                link
+            };
+            
+            console.log('Order Submitted:', orderData);
+            
+            alert(`تم استلام طلبك بنجاح!\n\nالمنصة: ${platform}\nالخدمة: ${serviceType}\nالكمية: ${quantity}\nالرابط: ${link}\n\nسيتم التواصل معك خلال 24 ساعة.`);
+            
+            closeModals();
+            document.getElementById('orderForm').reset();
+            
+            showConfetti();
+        }
+        
+        // Select Recharge Amount
+        function selectRechargeAmount(amount) {
+            selectedRechargeAmount = amount;
+            
+            // Update UI to show selection
+            const amounts = document.querySelectorAll('#rechargeModal .payment-method');
+            amounts.forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Find and highlight selected amount
+            const selectedEl = Array.from(amounts).find(el => {
+                return el.textContent.includes(`${amount} نقطة`);
+            });
+            
+            if (selectedEl) {
+                selectedEl.classList.add('selected');
+            }
+        }
+        
+        // Select Payment Method
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            // Update UI to show selection
+            const methods = document.querySelectorAll('#rechargeModal .payment-methods .payment-method');
+            methods.forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Find and highlight selected method
+            const selectedEl = Array.from(methods).find(el => {
+                if (method === 'credit' && el.textContent.includes('بطاقة')) return true;
+                if (method === 'paypal' && el.textContent.includes('باي بال')) return true;
+                if (method === 'bank' && el.textContent.includes('تحويل')) return true;
+                return false;
+            });
+            
+            if (selectedEl) {
+                selectedEl.classList.add('selected');
+            }
+        }
+        
+        // Process Recharge
+        function processRecharge() {
+            if (selectedRechargeAmount === 0) {
+                alert('الرجاء اختيار قيمة الشحن');
+                return;
+            }
+            
+            if (selectedPaymentMethod === '') {
+                alert('الرجاء اختيار وسيلة الدفع');
+                return;
+            }
+            
+            console.log('Processing Recharge:', {
+                amount: selectedRechargeAmount,
+                method: selectedPaymentMethod
+            });
+            
+            alert(`تم بدء عملية الشحن بنجاح!\n\nالقيمة: ${selectedRechargeAmount} نقطة\nوسيلة الدفع: ${getPaymentMethodName(selectedPaymentMethod)}\n\nسيتم توجيهك لإتمام عملية الدفع.`);
+            
+            // Reset selection
+            selectedRechargeAmount = 0;
+            selectedPaymentMethod = '';
+            
+            closeModals();
+            showConfetti();
+        }
+        
+        // Get payment method name in Arabic
+        function getPaymentMethodName(method) {
+            switch(method) {
+                case 'credit': return 'بطاقة ائتمان';
+                case 'paypal': return 'باي بال';
+                case 'bank': return 'تحويل بنكي';
+                default: return method;
+            }
+        }
+        
+        // Show App Services
+        function showAppServices(app) {
+            const menu = document.getElementById('appServicesMenu');
+            const overlay = document.getElementById('overlay');
+            const appLogo = document.getElementById('appLogo');
+            const appName = document.getElementById('appName');
+            const servicesList = document.getElementById('appServicesList');
+            
+            // Set app logo and name
+            appLogo.src = getAppLogo(app);
+            appName.textContent = getAppName(app);
+            
+            // Load services for the app
+            servicesList.innerHTML = '';
+            const services = getAppServices(app);
+            services.forEach(service => {
+                const serviceItem = document.createElement('div');
+                serviceItem.className = 'app-service-item';
+                serviceItem.innerHTML = `
+                    <h4>${service.name}</h4>
+                    <p>${service.description}</p>
+                    <div class="app-service-price">${service.price}</div>
+                `;
+                serviceItem.onclick = () => {
+                    closeAppServices();
+                    document.getElementById('platform').value = app;
+                    document.getElementById('serviceType').value = service.type;
+                    showOrderForm();
+                };
+                servicesList.appendChild(serviceItem);
+            });
+            
+            menu.classList.add('active');
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close App Services
+        function closeAppServices() {
+            document.getElementById('appServicesMenu').classList.remove('active');
+            document.getElementById('overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close all overlays
+        function closeAllOverlays() {
+            closeModals();
+            closeAppServices();
+        }
+        
+        // Helper functions for app services
+        function getAppLogo(app) {
+            const logos = {
+                instagram: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png',
+                tiktok: 'https://static.vecteezy.com/system/resources/previews/018/930/572/original/tiktok-logo-tiktok-icon-transparent-free-png.png',
+                twitter: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/512px-Logo_of_Twitter.svg.png',
+                facebook: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png',
+                youtube: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png',
+                snapchat: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1024px-Snapchat_logo.svg.png',
+                telegram: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png',
+                pinterest: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png'
+            };
+            return logos[app] || '';
+        }
+        
+        function getAppName(app) {
+            const names = {
+                instagram: 'خدمات انستجرام',
+                tiktok: 'خدمات تيك توك',
+                twitter: 'خدمات تويتر',
+                facebook: 'خدمات فيسبوك',
+                youtube: 'خدمات يوتيوب',
+                snapchat: 'خدمات سناب شات',
+                telegram: 'خدمات تيليجرام',
+                pinterest: 'خدمات بنترست'
+            };
+            return names[app] || 'خدمات التطبيق';
+        }
+        
+        function getAppServices(app) {
+            const services = {
+                instagram: [
+                    { name: 'متابعين انستجرام', description: 'متابعين حقيقيين ونشطين لحسابك', type: 'followers', price: 'من $2.99' },
+                    { name: 'لايكات انستجرام', description: 'زيادة تفاعل مع صورك ومنشوراتك', type: 'likes', price: 'من $0.99' },
+                    { name: 'مشاهدات ستوري', description: 'زيادة مشاهدات قصصك على انستجرام', type: 'views', price: 'من $0.50' },
+                    { name: 'تعليقات مخصصة', description: 'تعليقات إيجابية ومخصصة حسب طلبك', type: 'comments', price: 'من $5.99' },
+                    { name: 'مشاهدات ريلز', description: 'زيادة مشاهدات فيديوهات الريلز', type: 'views', price: 'من $1.49' }
+                ],
+                tiktok: [
+                    { name: 'متابعين تيك توك', description: 'متابعين حقيقيين لحسابك على تيك توك', type: 'followers', price: 'من $3.99' },
+                    { name: 'لايكات تيك توك', description: 'زيادة إعجابات فيديوهاتك', type: 'likes', price: 'من $1.49' },
+                    { name: 'مشاهدات فيديو', description: 'زيادة مشاهدات فيديوهاتك للوصول للترند', type: 'views', price: 'من $0.99' },
+                    { name: 'مشاركات', description: 'زيادة مشاركات فيديوهاتك', type: 'shares', price: 'من $2.99' }
+                ],
+                twitter: [
+                    { name: 'متابعين تويتر', description: 'متابعين حقيقيين لحسابك على تويتر', type: 'followers', price: 'من $2.49' },
+                    { name: 'لايكات تويتر', description: 'زيادة إعجابات تغريداتك', type: 'likes', price: 'من $0.99' },
+                    { name: 'إعادة تغريد', description: 'زيادة إعادة التغريد لمنشوراتك', type: 'retweets', price: 'من $1.99' },
+                    { name: 'تعليقات تويتر', description: 'تعليقات إيجابية على تغريداتك', type: 'comments', price: 'من $3.99' }
+                ],
+                facebook: [
+                    { name: 'إعجابات صفحة', description: 'زيادة إعجابات صفحتك على فيسبوك', type: 'page_likes', price: 'من $2.99' },
+                    { name: 'متابعين صفحة', description: 'زيادة متابعين صفحتك', type: 'followers', price: 'من $2.49' },
+                    { name: 'إعجابات منشورات', description: 'زيادة إعجابات منشوراتك', type: 'likes', price: 'من $0.99' },
+                    { name: 'مشاهدات فيديو', description: 'زيادة مشاهدات فيديوهاتك', type: 'views', price: 'من $1.49' }
+                ],
+                youtube: [
+                    { name: 'مشتركين قناة', description: 'زيادة مشتركين قناتك على يوتيوب', type: 'subscribers', price: 'من $5.99' },
+                    { name: 'مشاهدات فيديو', description: 'زيادة مشاهدات فيديوهاتك', type: 'views', price: 'من $1.99' },
+                    { name: 'إعجابات فيديو', description: 'زيادة إعجابات فيديوهاتك', type: 'likes', price: 'من $0.99' },
+                    { name: 'تعليقات فيديو', description: 'تعليقات إيجابية على فيديوهاتك', type: 'comments', price: 'من $4.99' }
+                ],
+                snapchat: [
+                    { name: 'متابعين سناب', description: 'زيادة متابعين حسابك على سناب شات', type: 'followers', price: 'من $4.99' },
+                    { name: 'مشاهدات ستوري', description: 'زيادة مشاهدات قصصك', type: 'views', price: 'من $1.49' },
+                    { name: 'سكور سناب', description: 'زيادة نقاط سناب سكور', type: 'score', price: 'من $6.99' }
+                ],
+                telegram: [
+                    { name: 'أعضاء قناة', description: 'زيادة أعضاء قناتك على تيليجرام', type: 'members', price: 'من $3.99' },
+                    { name: 'مشاهدات منشور', description: 'زيادة مشاهدات منشوراتك', type: 'views', price: 'من $0.99' },
+                    { name: 'تفاعل منشورات', description: 'زيادة التفاعل مع منشوراتك', type: 'engagement', price: 'من $2.99' }
+                ],
+                pinterest: [
+                    { name: 'متابعين بنترست', description: 'زيادة متابعين حسابك على بنترست', type: 'followers', price: 'من $2.99' },
+                    { name: 'حفظ البينات', description: 'زيادة عمليات حفظ منشوراتك', type: 'saves', price: 'من $1.49' },
+                    { name: 'مشاهدات بين', description: 'زيادة مشاهدات البينات', type: 'views', price: 'من $0.99' }
+                ]
+            };
+            
+            return services[app] || [];
+        }
+        
+        // Show confetti animation
+        function showConfetti() {
+            const confettiSettings = {
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            };
+            
+            if (typeof confetti === 'function') {
+                confetti(confettiSettings);
+            }
+        }
+        
+        // Toggle accordion
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            accordion.classList.toggle('active');
+            
+            // Close other accordions
+            const allAccordions = document.querySelectorAll('.accordion');
+            allAccordions.forEach(item => {
+                if (item !== accordion) {
+                    item.classList.remove('active');
+                }
+            });
+        }
+        
+        // Select subscription plan
+        function selectPlan(plan) {
+            console.log(`Selected plan: ${plan}`);
+            alert(`تم اختيار ${getPlanName(plan)}. سيتم توجيهك لصفحة الدفع.`);
+        }
+        
+        // Get plan name in Arabic
+        function getPlanName(plan) {
+            switch(plan) {
+                case 'basic': return 'الباقة الأساسية';
+                case 'professional': return 'الباقة الاحترافية';
+                case 'premium': return 'الباقة المتقدمة';
+                default: return plan;
+            }
+        }
+        
+        // Send contact form
+        function sendContactForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            if (!name || !email || !subject || !message) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            console.log('Contact Form Submitted:', {
+                name,
+                email,
+                subject,
+                message
+            });
+            
+            alert(`تم إرسال رسالتك بنجاح!\n\nسنقوم بالرد عليك في أقرب وقت ممكن.`);
+            
+            document.getElementById('contactForm').reset();
+        }
+        
+        // Toggle mobile menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+            
+            // Close mobile menu when clicking on a link
+            const mobileLinks = document.querySelectorAll('.mobile-menu a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+            
+            // Add animation to cards on scroll
+            const observerOptions = {
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            const animatedElements = document.querySelectorAll('.service-card, .app-icon, .pricing-card, .feature-item, .testimonial-card');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</body>
+</html>
